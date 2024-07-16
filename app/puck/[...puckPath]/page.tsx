@@ -28,11 +28,14 @@ export async function generateMetadata({
   };
 }
 
-export default async function Page({
-  params: { puckPath = [] },
-}: {
+type TPage = {
   params: { puckPath: string[] };
-}) {
+};
+
+export default async function Page(props: Readonly<TPage>) {
+  const {
+    params: { puckPath = [] },
+  } = props;
   const path = `/${puckPath.join("/")}`;
   const data = getPage(path);
 

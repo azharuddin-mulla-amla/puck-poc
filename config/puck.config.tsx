@@ -1,7 +1,9 @@
 import type { Config } from "@measured/puck";
+import { ProductConfig } from "./blocks/products/products";
 
 type Props = {
   HeadingBlock: { title: string };
+  Products: {};
 };
 
 export const config: Config<Props> = {
@@ -19,6 +21,7 @@ export const config: Config<Props> = {
         </div>
       ),
     },
+    Products: ProductConfig,
   },
 };
 
