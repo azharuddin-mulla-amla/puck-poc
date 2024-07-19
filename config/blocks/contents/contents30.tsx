@@ -13,7 +13,7 @@ function Contents() {
       }}
     >
       <h2>Contents 30</h2>
-      {context?.contents.map((content: any) => {
+      {context?.contents?.map((content: any) => {
         return <p key={content.id}>{content.desc}</p>;
       })}
     </section>

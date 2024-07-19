@@ -37,6 +37,7 @@ export function getAPIList(length = 0) {
       type: `Products${idx + 1}`,
       fn: fetchProducts,
       key: `products`,
+      tempKey: "Products",
     };
   });
 
@@ -45,6 +46,7 @@ export function getAPIList(length = 0) {
       type: `Contents${idx + 1}`,
       fn: fetchContents,
       key: `contents`,
+      tempKey: "Contents",
     };
   });
 
@@ -53,6 +55,7 @@ export function getAPIList(length = 0) {
       type: `Slider${idx + 1}`,
       fn: fetchSlider,
       key: `slider`,
+      tempKey: "Slider",
     };
   });
 

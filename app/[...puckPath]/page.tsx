@@ -35,14 +35,17 @@ export async function getServerData(data: Data) {
     .map((i) => i.type)
     .filter((item, idx, arr) => idx === arr.indexOf(item));
 
-  const apiCallingList: Array<any> = getAPIList(2);
+  const apiCallingList: Array<any> = getAPIList(1);
 
   // Remove duplicate Item
   const listOfApiCalls = contentKeys
-    .map((item) => {
-      return apiCallingList.find((i) => i.type === item);
+    .map((item: string) => {
+      const key = item.split("_")[0];
+      return apiCallingList.find((i) => i.tempKey === key);
     })
     .filter(Boolean);
+
+  console.log(contentKeys, apiCallingList);
 
   let result: any = {};
   for (const item of listOfApiCalls) {
@@ -70,4 +73,4 @@ export default async function Page({
 
 // Force Next.js to produce static pages: https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config#dynamic
 // Delete this if you need dynamic rendering, such as access to headers or cookies
-export const dynamic = "force-static";
+export const dynamic = "force-dynamic";

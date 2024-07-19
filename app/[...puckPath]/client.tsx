@@ -9,7 +9,6 @@ import { RootProvider } from "../../context/RootProvider";
 type TClient = { data: Data; serverData: Readonly<TServerData> };
 
 export function Client({ data, serverData }: Readonly<TClient>) {
-  console.log({ serverData });
   return (
     <RootProvider value={serverData}>
       <Render config={config} data={data} />
