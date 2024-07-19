@@ -14,6 +14,8 @@ import { Client } from "./client";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { getPage } from "../../lib/get-page";
+import { Data } from "@measured/puck";
+import { getAPIList } from "../../services";
 
 export async function generateMetadata({
   params: { puckPath = [] },
@@ -25,6 +27,29 @@ export async function generateMetadata({
   return {
     title: getPage(path)?.root.props.title,
   };
+}
+
+export async function getServerData(data: Data) {
+  // Remove duplicate Item
+  const contentKeys = data.content
+    .map((i) => i.type)
+    .filter((item, idx, arr) => idx === arr.indexOf(item));
+
+  const apiCallingList: Array<any> = getAPIList(2);
+
+  // Remove duplicate Item
+  const listOfApiCalls = contentKeys
+    .map((item) => {
+      return apiCallingList.find((i) => i.type === item);
+    })
+    .filter(Boolean);
+
+  let result: any = {};
+  for (const item of listOfApiCalls) {
+    result[item.key] = await item.fn();
+  }
+
+  return result;
 }
 
 export default async function Page({
@@ -39,7 +64,8 @@ export default async function Page({
     return notFound();
   }
 
-  return <Client data={data} />;
+  let resultData: any = await getServerData(data);
+  return <Client data={data} serverData={resultData} />;
 }
 
 // Force Next.js to produce static pages: https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config#dynamic

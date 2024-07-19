@@ -2,15 +2,26 @@
 
 import type { Data } from "@measured/puck";
 import { Render } from "@measured/puck";
-// import config from "../../puck.config";
 import config from "../../config/puck.config";
-import { ProductProvider } from "../../context/ProductProvider";
+import { TServerData } from "../puck/[...puckPath]/client";
+import { RootProvider } from "../../context/RootProvider";
 
-type TClient = { data: Data };
-export function Client({ data }: Readonly<TClient>) {
+type TClient = { data: Data; serverData: Readonly<TServerData> };
+
+export function Client({ data, serverData }: Readonly<TClient>) {
+  console.log({ serverData });
   return (
-    <ProductProvider>
+    <RootProvider value={serverData}>
       <Render config={config} data={data} />
-    </ProductProvider>
+    </RootProvider>
   );
 }
+
+// let providers: Array<any> = generateProvider(serverData);
+// const AllProvider = composeProvider(providers);
+
+// return (
+//   <AllProvider>
+//     <Render config={config} data={data} />
+//   </AllProvider>
+// );
