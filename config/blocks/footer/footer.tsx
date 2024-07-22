@@ -1,7 +1,7 @@
 import { ComponentConfig } from "@measured/puck";
 import React from "react";
 
-function Footer() {
+export function Footer(props: any) {
   return (
     <footer>
       <p>&copy; all right reserved.</p>

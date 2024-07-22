@@ -1,4 +1,4 @@
-import type { Config } from "@measured/puck";
+import type { ComponentConfig, Config, Data } from "@measured/puck";
 
 import { Product1Config } from "./blocks/products/products1";
 import { Product2Config } from "./blocks/products/products2";
@@ -157,6 +157,7 @@ import { HeadingConfig } from "./blocks/heading/heading";
 import { FooterConfig } from "./blocks/footer/footer";
 import { CardConfig } from "./blocks/card/card";
 import { ButtonConfig } from "./blocks/button/button";
+import { COMPONENTS } from "../components/components.list";
 
 type Props = {
   // Client_Heading: { title: string };
@@ -495,4 +496,21 @@ export const config: Config<Props> = {
   },
 };
 
+export function updateConfig(data: Data, config: Config<any>) {
+  const updatedConfig = config;
+  for (const content of data.content) {
+    const hasExist = Object.keys(config.components).includes(
+      content.type as any
+    );
+    if (!hasExist) {
+      const Component = COMPONENTS.get(content.type as string);
+      const NewComponent: ComponentConfig<{}> = {
+        fields: {},
+        render: () => <Component />,
+      };
+      updatedConfig.components[content.type] = NewComponent;
+    }
+  }
+  return updatedConfig;
+}
 export default config;

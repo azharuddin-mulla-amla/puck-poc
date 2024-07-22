@@ -45,8 +45,6 @@ export async function getServerData(data: Data) {
     })
     .filter(Boolean);
 
-  console.log(contentKeys, apiCallingList);
-
   let result: any = {};
   for (const item of listOfApiCalls) {
     result[item.key] = await item.fn();
@@ -67,7 +65,8 @@ export default async function Page({
     return notFound();
   }
 
-  let resultData: any = await getServerData(data);
+  const resultData: any = await getServerData(data);
+
   return <Client data={data} serverData={resultData} />;
 }
 

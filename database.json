@@ -1,1 +1,136 @@
-{"/":{"content":[{"type":"Products_1","props":{"id":"Products_1-8861a8c7-8349-4141-b732-908222d8bf8a"}}],"root":{"props":{}},"zones":{}}}
+{
+    "/": {
+        "content": [
+            {
+                "type": "About",
+                "props": {
+                    "id": "About-77e86cc0-1fe1-4f99-83ab-13f88d4e7498"
+                }
+            },
+            {
+                "type": "Products_1",
+                "props": {
+                    "id": "Products_1_36791913366957"
+                }
+            },
+            {
+                "type": "About",
+                "props": {
+                    "id": "About-20b315fe-efae-4fc5-9848-e08a0740827d"
+                }
+            },
+            {
+                "type": "Products_2",
+                "props": {
+                    "id": "Products_2_7202656013796"
+                }
+            },
+            {
+                "type": "Products_3",
+                "props": {
+                    "id": "Products_3_99274357523962"
+                }
+            },
+            {
+                "type": "Products_4",
+                "props": {
+                    "id": "Products_4_45547933541475"
+                }
+            },
+            {
+                "type": "Products_5",
+                "props": {
+                    "id": "Products_5_72120060870456"
+                }
+            },
+            {
+                "type": "Products_6",
+                "props": {
+                    "id": "Products_6_5666360386243"
+                }
+            },
+            {
+                "type": "Slider_1",
+                "props": {
+                    "id": "Slider_1_33718298396138"
+                }
+            },
+            {
+                "type": "Footer",
+                "props": {
+                    "id": "Footer_32424009396588"
+                }
+            },
+            {
+                "type": "Setting",
+                "props": {
+                    "id": "Setting_12701072070057"
+                }
+            },
+            {
+                "type": "Profile",
+                "props": {
+                    "id": "Profile_96633798111626"
+                }
+            },
+            {
+                "type": "Profile",
+                "props": {
+                    "id": "Profile_30219788604626"
+                }
+            },
+            {
+                "type": "Profile",
+                "props": {
+                    "id": "Profile_91231648050773"
+                }
+            },
+            {
+                "type": "About",
+                "props": {
+                    "id": "About_40125605576328"
+                }
+            },
+            {
+                "type": "About",
+                "props": {
+                    "id": "About_35779629120574"
+                }
+            },
+            {
+                "type": "About",
+                "props": {
+                    "id": "About-56f46181-bc6a-4a97-8bed-877f818a6259"
+                }
+            },
+            {
+                "type": "Setting",
+                "props": {
+                    "id": "Setting-d01dc430-f541-433f-844c-3c47811ec677"
+                }
+            },
+            {
+                "type": "Profile",
+                "props": {
+                    "id": "Profile-c96bce8a-1e49-49f4-9dc9-9e151b895fb4"
+                }
+            },
+            {
+                "type": "About",
+                "props": {
+                    "id": "About-fae6a2ef-87cd-40fe-bb15-75ecf1d6a565"
+                }
+            },
+            {
+                "type": "About",
+                "props": {
+                    "id": "About_31583824031293"
+                }
+            }
+        ],
+        "root": {
+            "props": {}
+        },
+        "zones": {}
+    }
+}

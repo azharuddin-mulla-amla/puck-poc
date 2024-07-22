@@ -6,9 +6,8 @@ function ProductItem(props: Readonly<any>) {
   return <li>Product {props.product.title}</li>;
 }
 
-function Products() {
+export function Products(props: any) {
   const context = useProvider();
-  console.log("context", context);
   return (
     <div
       style={{

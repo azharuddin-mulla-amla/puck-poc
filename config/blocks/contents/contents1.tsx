@@ -1,9 +1,8 @@
 import { ComponentConfig } from "@measured/puck";
 import React from "react";
-import { useContents } from "../../../context/ContentsProvider";
 import { useProvider } from "../../../context/RootProvider";
 
-function Contents() {
+export function Contents() {
   const context = useProvider();
   return (
     <section
@@ -13,7 +12,7 @@ function Contents() {
       }}
     >
       <h2>Contents 1</h2>
-      {context?.contents.map((content: any) => {
+      {context.contents.map((content: any) => {
         return <p key={content.id}>{content.desc}</p>;
       })}
     </section>

@@ -7,7 +7,7 @@ function Slide(props: any) {
   return <li>slide {props.slide.title}</li>;
 }
 
-function Slider() {
+export function Slider(props: any) {
   const context = useProvider();
   return (
     <div
