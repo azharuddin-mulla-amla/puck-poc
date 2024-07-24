@@ -12,7 +12,8 @@ type TClient = {
 };
 
 export function Client({ data, serverData }: Readonly<TClient>) {
-  const updatedConfig = updateConfig(data, config);
+  const { config: updatedConfig } = updateConfig(data, config);
+
   return (
     <RootProvider value={serverData}>
       <Render config={updatedConfig} data={data} />
