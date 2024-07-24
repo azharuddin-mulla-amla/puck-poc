@@ -1,15 +1,15 @@
 import { ComponentConfig } from "@measured/puck";
 import React from "react";
 
-export function Footer(props: any) {
+export function Products(props: any) {
   return (
     <div>
-      <h2>Footer</h2>
+      <h2>Products</h2>
     </div>
   );
 }
 
-export const FooterConfig: ComponentConfig<{}> = {
+export const ProductsConfig: ComponentConfig<{}> = {
   fields: {},
   resolveData: async () => {
     const url = "https://jsonplaceholder.typicode.com/posts";
@@ -27,6 +27,6 @@ export const FooterConfig: ComponentConfig<{}> = {
   defaultProps: {
     apiData: [],
   },
-  label: "Footer",
-  render: (props) => <Footer {...props} />,
+  label: "Products",
+  render: (props) => <Products {...props} />,
 };

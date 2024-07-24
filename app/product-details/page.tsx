@@ -1,7 +1,7 @@
 import React from "react";
-import { Products } from "../../config/blocks/products/products1";
-import { Slider } from "../../config/blocks/slider/slider1";
-import { Footer } from "../../config/blocks/footer/footer";
+import { Products } from "../../config/blocks-v1/products/products1";
+import { Slider } from "../../config/blocks-v1/slider/slider1";
+import { Footer } from "../../config/blocks-v1/footer/footer";
 import Setting from "../../components/Setting";
 import Profile from "../../components/Profile";
 import About from "../../components/About";

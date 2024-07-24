@@ -15,12 +15,18 @@ import "@measured/puck/puck.css";
 import { Client } from "./client";
 import { Metadata } from "next";
 import { getPage } from "../../../lib/get-page";
+import { notFound } from "next/navigation";
 import {
   fetchContents,
   fetchProducts,
   fetchSlider,
   getAPIList,
 } from "../../../services";
+import {
+  dataProvider,
+  fetchChild,
+  fetchChild2,
+} from "../../../services/dataProvider";
 
 export async function generateMetadata({
   params: { puckPath = [] },
@@ -45,15 +51,11 @@ export default async function Page(props: Readonly<TPage>) {
   const path = `/${puckPath.join("/")}`;
   const data = getPage(path);
 
-  // const products: Array<any> = await fetchProducts();
-  // const slider: Array<any> = await fetchSlider();
-  // const contents: Array<any> = await fetchContents();
-
-  const listOfApiCalls = getAPIList(50);
+  console.log(data);
   let result: any = {};
-  for (const item of listOfApiCalls) {
-    result[item.key] = await item.fn();
-  }
+  // for (const item of listOfApiCalls) {
+  //   result[item.key] = await item.fn();
+  // }
 
   return <Client path={path} data={data} serverData={result} />;
 }

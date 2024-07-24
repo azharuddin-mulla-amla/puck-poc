@@ -14,7 +14,7 @@ function About(props: any) {
     >
       <h2>About</h2>
       <ul>
-        {context?.products?.slice(1, 10).map((product: any) => (
+        {context?.about?.slice(1, 10).map((product: any) => (
           <li key={product.id}>About {product.title}</li>
         ))}
       </ul>

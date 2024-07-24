@@ -22,6 +22,12 @@ export async function fetchContents() {
   return await response.json();
 }
 
+export async function fetchAbout() {
+  const response = await fetch("https://jsonplaceholder.typicode.com/posts");
+  console.log("calling About");
+  return await response.json();
+}
+
 // export const apiCallingList = [
 //   // { type: "Products", fn: fetchProducts, key: "products" },
 //   // { type: "Contents", fn: fetchContents, key: "contents" },

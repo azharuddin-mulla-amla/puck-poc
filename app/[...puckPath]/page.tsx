@@ -16,6 +16,11 @@ import { Metadata } from "next";
 import { getPage } from "../../lib/get-page";
 import { Data } from "@measured/puck";
 import { getAPIList } from "../../services";
+import {
+  dataProvider,
+  fetchChild,
+  fetchChild2,
+} from "../../services/dataProvider";
 
 export async function generateMetadata({
   params: { puckPath = [] },
@@ -31,26 +36,43 @@ export async function generateMetadata({
 
 export async function getServerData(data: Data) {
   // Remove duplicate Item
-  const contentKeys = data.content
-    .map((i) => i.type)
-    .filter((item, idx, arr) => idx === arr.indexOf(item));
+  // const contentKeys = data.content
+  //   .map((i) => i.type)
+  //   .filter((item, idx, arr) => idx === arr.indexOf(item));
 
-  const apiCallingList: Array<any> = getAPIList(1);
+  // console.log(contentKeys);
+
+  // const apiCallingList: Array<any> = getAPIList(1);
 
   // Remove duplicate Item
-  const listOfApiCalls = contentKeys
-    .map((item: string) => {
-      const key = item.split("_")[0];
-      return apiCallingList.find((i) => i.tempKey === key);
-    })
-    .filter(Boolean);
+  // const listOfApiCalls = contentKeys
+  //   .map((item: string) => {
+  //     const key = item.split("_")[0];
+  //     return apiCallingList.find((i) => i.tempKey === key);
+  //   })
+  //   .filter(Boolean);
 
   let result: any = {};
-  for (const item of listOfApiCalls) {
-    result[item.key] = await item.fn();
-  }
+  // for (const item of listOfApiCalls) {
+  //   result[item.key] = await item.fn();
+  // }
 
   return result;
+}
+
+export async function getUpdateData(data: Data) {
+  console.log(data);
+
+  // for (const item of data.content) {
+  //   console.log("item>>>", item, data);
+  //   if (item.props?.url) {
+  //     const response = await fetch(item.props.url);
+  //     const responseData = await response.json();
+  //     item.props.apiData = responseData;
+  //   }
+  // }
+
+  return data;
 }
 
 export default async function Page({
@@ -66,8 +88,13 @@ export default async function Page({
   }
 
   const resultData: any = await getServerData(data);
+  const updateData: Data = await getUpdateData(data);
+  console.log(updateData);
 
-  return <Client data={data} serverData={resultData} />;
+  // getData("child1", fetchChild);
+  // getData("child2", fetchChild2);
+
+  return <Client data={updateData} serverData={resultData} />;
 }
 
 // Force Next.js to produce static pages: https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config#dynamic

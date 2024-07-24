@@ -6,6 +6,11 @@ import { Drawer, Puck } from "@measured/puck";
 // import config from "../../../puck.config";
 import config, { components, updateConfig } from "../../../config/puck.config";
 import { RootProvider } from "../../../context/RootProvider";
+import {
+  dataProvider,
+  fetchChild,
+  fetchChild2,
+} from "../../../services/dataProvider";
 
 export type TServerData = {
   products?: Array<any>;
@@ -26,9 +31,25 @@ export function Client(props: Readonly<TClient>) {
         config={updatedConfig}
         data={data}
         onPublish={async (data: Data) => {
+          const newContent = data.content.map((item) => {
+            if (item.props?.apiData) {
+              const { apiData, ...restProps } = item.props;
+              return {
+                ...item,
+                props: { ...restProps },
+              };
+            }
+            return item;
+          });
+
+          const newData = {
+            ...data,
+            content: newContent,
+          };
+          console.log("publish", newData);
           await fetch("/puck/api", {
             method: "post",
-            body: JSON.stringify({ data, path }),
+            body: JSON.stringify({ data: newData, path }),
           });
         }}
         overrides={{

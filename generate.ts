@@ -4,6 +4,7 @@ const glob = require("glob");
 // let crypto = require("crypto");
 
 const targetDirectory = __dirname; // Set the path to your pages directory
+const puckConfigPath = path.join(__dirname, "puck.config.tsx");
 
 function extractIds(content) {
   const idRegex = /type="([^"]+)"/g;
@@ -19,9 +20,11 @@ function extractIds(content) {
 }
 
 function extractProps(content) {
-  console.log(content);
   const typeRegex = /type="([^"]+)"/g;
+  const elementRegex = /<(\w+)([^>]*)>/g;
   const props = [];
+
+  console.log(elementRegex);
 
   let match;
 
@@ -68,4 +71,23 @@ function generateJson() {
   fs.writeFileSync("database.json", JSON.stringify(result, null, 2), "utf-8");
 }
 
+function readConfig() {
+  // const puckConfig = glob.sync("../my-app/config/puck.config.tsx");
+
+  // const content = fs.readFileSync(puckConfig[0], "utf-8");
+  // console.log(content);
+  // Resolve the path to the config file
+  const configPath = path.resolve(
+    __dirname,
+    "../my-app/config/puck.config.tsx"
+  );
+
+  // Import the config file
+  const { config } = require(configPath);
+
+  // Log the config object
+  console.log("Config:", config);
+}
+
+readConfig();
 generateJson();
