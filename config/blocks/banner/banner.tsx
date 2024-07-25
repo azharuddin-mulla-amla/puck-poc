@@ -1,33 +1,35 @@
 import { ComponentConfig } from "@measured/puck";
 import React from "react";
+import { useProvider } from "../../../context/RootProvider";
 
 export function Banner(props: any) {
-  console.log(props);
+  const context = useProvider();
+
   return (
-    <div>
+    <section>
       <h2>Banner</h2>
-    </div>
+    </section>
   );
 }
 
 export const BannerConfig: ComponentConfig<{}> = {
   fields: {},
-  resolveData: async () => {
-    const url = "https://jsonplaceholder.typicode.com/posts";
-    const response = await fetch(url);
+  // resolveData: async () => {
+  //   const url = "https://jsonplaceholder.typicode.com/posts";
+  //   const response = await fetch(url);
 
-    const data = await response.json();
-    console.log("resolve", data);
-    return {
-      props: {
-        apiData: data,
-        url: url,
-      },
-    };
-  },
+  //   const data = await response.json();
+  //   return {
+  //     props: {
+  //       apiData: data,
+  //       url: url,
+  //     },
+  //   };
+  // },
   defaultProps: {
     apiData: [],
     url: "https://jsonplaceholder.typicode.com/posts",
+    key: "banner", // for store data in context, we use this key as variable name
   },
   label: "Banner",
   render: (props) => <Banner {...props} />,

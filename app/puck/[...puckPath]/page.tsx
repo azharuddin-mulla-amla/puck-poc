@@ -16,17 +16,7 @@ import { Client } from "./client";
 import { Metadata } from "next";
 import { getPage } from "../../../lib/get-page";
 import { notFound } from "next/navigation";
-import {
-  fetchContents,
-  fetchProducts,
-  fetchSlider,
-  getAPIList,
-} from "../../../services";
-import {
-  dataProvider,
-  fetchChild,
-  fetchChild2,
-} from "../../../services/dataProvider";
+import { apiIntercept, componentsApiUrlAndContextKey } from "../../../services";
 
 export async function generateMetadata({
   params: { puckPath = [] },
@@ -51,10 +41,27 @@ export default async function Page(props: Readonly<TPage>) {
   const path = `/${puckPath.join("/")}`;
   const data = getPage(path);
 
-  console.log(data);
   let result: any = {};
   // for (const item of listOfApiCalls) {
   //   result[item.key] = await item.fn();
+  // }
+
+  for (const item of componentsApiUrlAndContextKey) {
+    console.log("item", item);
+    const response = await apiIntercept(item.url, item.body);
+    console.log("response---", JSON.stringify(response));
+    if (response) {
+      result[item.key] = response;
+    }
+
+    // const response = await fetch(item.url);
+    // const responseData = await response.json();
+    // result[item.key] = responseData;
+  }
+
+  // const sliderResponse = await apiIntercept("", "");
+  // if (sliderResponse?.Slider) {
+  //   result["sliderBanners"] = sliderResponse.Slider?.SliderBanners || [];
   // }
 
   return <Client path={path} data={data} serverData={result} />;

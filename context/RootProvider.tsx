@@ -4,14 +4,7 @@ const RootProviderContext = createContext<any>({});
 
 function RootProvider({ children, value }) {
   return (
-    <RootProviderContext.Provider
-      // value={{
-      //   products: value.products || [],
-      //   slider: value.slider || [],
-      //   contents: value.contents || [],
-      // }}
-      value={value}
-    >
+    <RootProviderContext.Provider value={value}>
       {children}
     </RootProviderContext.Provider>
   );

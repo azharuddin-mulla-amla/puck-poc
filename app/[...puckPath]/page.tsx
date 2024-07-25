@@ -15,7 +15,7 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { getPage } from "../../lib/get-page";
 import { Data } from "@measured/puck";
-import { getAPIList } from "../../services";
+import { apiIntercept, getAPIList } from "../../services";
 import {
   dataProvider,
   fetchChild,
@@ -87,14 +87,37 @@ export default async function Page({
     return notFound();
   }
 
-  const resultData: any = await getServerData(data);
+  // const resultData: any = await getServerData(data);
   const updateData: Data = await getUpdateData(data);
   console.log(updateData);
 
-  // getData("child1", fetchChild);
-  // getData("child2", fetchChild2);
+  // Load API Data from database Json
+  let results: any = {};
+  for (const item of data.content) {
+    if (item.props?.url && item.props?.key) {
+      if (results[item.props.key]) {
+        // Don't call API if key exist in results
+      } else {
+        const response = await apiIntercept(item.props.url, item.props.body);
+        if (response) {
+          results[item.props.key] = response;
+        }
+      }
+    }
+  }
 
-  return <Client data={updateData} serverData={resultData} />;
+  // const body = {
+  //   LocaleId: 1,
+  //   PublishCatalogId: 5,
+  //   WidgetKey: "555",
+  //   WidgetCode: "BannerSlider",
+  //   TypeOfMapping: "PortalMapping",
+  //   DisplayName: "BANNER WIDGET",
+  //   PortalId: 7,
+  //   CMSMappingId: 7,
+  // };
+
+  return <Client data={updateData} serverData={results} />;
 }
 
 // Force Next.js to produce static pages: https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config#dynamic

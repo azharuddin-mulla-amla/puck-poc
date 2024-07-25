@@ -6,11 +6,6 @@ import { Drawer, Puck } from "@measured/puck";
 // import config from "../../../puck.config";
 import config, { components, updateConfig } from "../../../config/puck.config";
 import { RootProvider } from "../../../context/RootProvider";
-import {
-  dataProvider,
-  fetchChild,
-  fetchChild2,
-} from "../../../services/dataProvider";
 
 export type TServerData = {
   products?: Array<any>;
