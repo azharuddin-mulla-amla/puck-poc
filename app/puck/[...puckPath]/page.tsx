@@ -15,14 +15,15 @@ import "@measured/puck/puck.css";
 import { Client } from "./client";
 import { Metadata } from "next";
 import { getPage } from "../../../lib/get-page";
-import { notFound } from "next/navigation";
-import { apiIntercept, componentsApiUrlAndContextKey } from "../../../services";
+import { apiIntercept, apiUrls } from "../../../services";
+
+type TPage = Readonly<{
+  params: { puckPath: string[] };
+}>;
 
 export async function generateMetadata({
   params: { puckPath = [] },
-}: {
-  params: { puckPath: string[] };
-}): Promise<Metadata> {
+}: TPage): Promise<Metadata> {
   const path = `/${puckPath.join("/")}`;
 
   return {
@@ -30,39 +31,25 @@ export async function generateMetadata({
   };
 }
 
-type TPage = {
-  params: { puckPath: string[] };
-};
+async function getServerData() {
+  let results: any = {};
+  for (const item of apiUrls) {
+    // Call API only if key not exist, avoid repeat Same API call
+    if (!results[item.key]) {
+      const response = await apiIntercept(item.url, item.body);
+      if (response) {
+        results[item.key] = response;
+      }
+    }
+  }
+  return results;
+}
 
-export default async function Page(props: Readonly<TPage>) {
-  const {
-    params: { puckPath = [] },
-  } = props;
+export default async function Page({ params: { puckPath = [] } }: TPage) {
   const path = `/${puckPath.join("/")}`;
   const data = getPage(path);
 
-  let result: any = {};
-  // for (const item of listOfApiCalls) {
-  //   result[item.key] = await item.fn();
-  // }
+  const results = await getServerData();
 
-  for (const item of componentsApiUrlAndContextKey) {
-    console.log("item", item);
-    const response = await apiIntercept(item.url, item.body);
-    console.log("response---", JSON.stringify(response));
-    if (response) {
-      result[item.key] = response;
-    }
-
-    // const response = await fetch(item.url);
-    // const responseData = await response.json();
-    // result[item.key] = responseData;
-  }
-
-  // const sliderResponse = await apiIntercept("", "");
-  // if (sliderResponse?.Slider) {
-  //   result["sliderBanners"] = sliderResponse.Slider?.SliderBanners || [];
-  // }
-
-  return <Client path={path} data={data} serverData={result} />;
+  return <Client path={path} data={data} serverData={results} />;
 }

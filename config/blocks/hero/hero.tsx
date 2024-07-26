@@ -296,5 +296,5 @@ export const HeroConfig: ComponentConfig<any> = {
 
     return fields;
   },
-  render: (props) => <Hero {...props} />,
+  render: (props) => <Hero key={props.id} {...props} />,
 };

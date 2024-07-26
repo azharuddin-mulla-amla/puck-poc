@@ -15,12 +15,7 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { getPage } from "../../lib/get-page";
 import { Data } from "@measured/puck";
-import { apiIntercept, getAPIList } from "../../services";
-import {
-  dataProvider,
-  fetchChild,
-  fetchChild2,
-} from "../../services/dataProvider";
+import { apiIntercept } from "../../services";
 
 export async function generateMetadata({
   params: { puckPath = [] },
@@ -34,70 +29,12 @@ export async function generateMetadata({
   };
 }
 
+// Load API Data from database Json
 export async function getServerData(data: Data) {
-  // Remove duplicate Item
-  // const contentKeys = data.content
-  //   .map((i) => i.type)
-  //   .filter((item, idx, arr) => idx === arr.indexOf(item));
-
-  // console.log(contentKeys);
-
-  // const apiCallingList: Array<any> = getAPIList(1);
-
-  // Remove duplicate Item
-  // const listOfApiCalls = contentKeys
-  //   .map((item: string) => {
-  //     const key = item.split("_")[0];
-  //     return apiCallingList.find((i) => i.tempKey === key);
-  //   })
-  //   .filter(Boolean);
-
-  let result: any = {};
-  // for (const item of listOfApiCalls) {
-  //   result[item.key] = await item.fn();
-  // }
-
-  return result;
-}
-
-export async function getUpdateData(data: Data) {
-  console.log(data);
-
-  // for (const item of data.content) {
-  //   console.log("item>>>", item, data);
-  //   if (item.props?.url) {
-  //     const response = await fetch(item.props.url);
-  //     const responseData = await response.json();
-  //     item.props.apiData = responseData;
-  //   }
-  // }
-
-  return data;
-}
-
-export default async function Page({
-  params: { puckPath = [] },
-}: {
-  params: { puckPath: string[] };
-}) {
-  const path = `/${puckPath.join("/")}`;
-  const data = getPage(path);
-
-  if (!data) {
-    return notFound();
-  }
-
-  // const resultData: any = await getServerData(data);
-  const updateData: Data = await getUpdateData(data);
-  console.log(updateData);
-
-  // Load API Data from database Json
   let results: any = {};
   for (const item of data.content) {
     if (item.props?.url && item.props?.key) {
-      if (results[item.props.key]) {
-        // Don't call API if key exist in results
-      } else {
+      if (!results[item.props.key]) {
         const response = await apiIntercept(item.props.url, item.props.body);
         if (response) {
           results[item.props.key] = response;
@@ -106,18 +43,37 @@ export default async function Page({
     }
   }
 
-  // const body = {
-  //   LocaleId: 1,
-  //   PublishCatalogId: 5,
-  //   WidgetKey: "555",
-  //   WidgetCode: "BannerSlider",
-  //   TypeOfMapping: "PortalMapping",
-  //   DisplayName: "BANNER WIDGET",
-  //   PortalId: 7,
-  //   CMSMappingId: 7,
-  // };
+  return results;
+}
 
-  return <Client data={updateData} serverData={results} />;
+// Add data in props in database Json
+export async function getUpdateData(data: Data) {
+  for (const item of data.content) {
+    if (item.props?.url) {
+      const response = await apiIntercept(item.props.url, item.props.body);
+      if (response) {
+        item.props.apiData = response;
+      }
+    }
+  }
+  return data;
+}
+
+type TPage = Readonly<{
+  params: { puckPath: string[] };
+}>;
+
+export default async function Page({ params: { puckPath = [] } }: TPage) {
+  const path = `/${puckPath.join("/")}`;
+  const data = getPage(path);
+
+  if (!data) {
+    return notFound();
+  }
+
+  const resultData: any = await getServerData(data);
+
+  return <Client data={data} serverData={resultData} />;
 }
 
 // Force Next.js to produce static pages: https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config#dynamic

@@ -8,9 +8,9 @@ import getClassNameFactory from "../../../lib/get-class-name-factory";
 const getClassName = getClassNameFactory("Header", styles);
 
 function NavItem({ label, href }: { label: string; href: string }) {
-  const navPath = window?.location?.pathname?.replace("/edit", "") || "/";
+  // const navPath = window?.location?.pathname?.replace("/edit", "") || "/";
 
-  const isActive = navPath === (href.replace("/edit", "") || "/");
+  // const isActive = navPath === (href.replace("/edit", "") || "/");
 
   const El = href ? "a" : "span";
 
@@ -19,10 +19,8 @@ function NavItem({ label, href }: { label: string; href: string }) {
       href={href || "/"}
       style={{
         textDecoration: "none",
-        color: isActive
-          ? "var(--puck-color-grey-02)"
-          : "var(--puck-color-grey-06)",
-        fontWeight: isActive ? "600" : "400",
+        color: "var(--puck-color-grey-02)",
+        fontWeight: "400",
       }}
     >
       {label}
@@ -67,5 +65,5 @@ export const HeaderConfig: ComponentConfig<{}> = {
     body: { CMSMappingId: 7 },
   },
   label: "Header",
-  render: (props) => <Header {...props} />,
+  render: (props) => <Header key={props.id} {...props} />,
 };

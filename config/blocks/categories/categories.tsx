@@ -50,7 +50,7 @@ export function Categories(props: any) {
         }}
       >
         {[1, 2, 3, 4].map((item: any) => {
-          return <Card {...item} />;
+          return <Card key={item} {...item} />;
         })}
       </div>
     </section>
@@ -87,5 +87,5 @@ export const CategoriesConfig: ComponentConfig<{}> = {
     },
   },
   label: "Categories",
-  render: (props) => <Categories {...props} />,
+  render: (props) => <Categories key={props.id} {...props} />,
 };

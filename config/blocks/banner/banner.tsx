@@ -32,5 +32,5 @@ export const BannerConfig: ComponentConfig<{}> = {
     key: "banner", // for store data in context, we use this key as variable name
   },
   label: "Banner",
-  render: (props) => <Banner {...props} />,
+  render: (props) => <Banner key={props.id} {...props} />,
 };

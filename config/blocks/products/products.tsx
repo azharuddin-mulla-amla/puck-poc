@@ -2,6 +2,7 @@ import { ComponentConfig } from "@measured/puck";
 import React from "react";
 import Image from "next/image";
 import { useProvider } from "../../../context/RootProvider";
+import { dataStore } from "../../../services";
 
 function Card(props: any) {
   const img = props?.WebStoreProductModel?.ImageMediumPath ?? "";
@@ -37,8 +38,8 @@ function Card(props: any) {
 
 export function Products(props: any) {
   const context = useProvider();
-  const products = context.products?.Products ?? {};
-  console.log(props);
+  const products = context.products?.Products ?? [];
+  console.log({ dataStore });
   return (
     <section
       style={{
@@ -60,11 +61,18 @@ export function Products(props: any) {
             : {
                 display: "flex",
                 overflowX: "auto",
+                gap: 50,
               }
         }
       >
-        {products.map((item: any) => {
-          return <Card {...item} />;
+        {products?.map((item: any, idx: number) => {
+          console.log(item);
+          return (
+            <Card
+              {...item}
+              key={item?.WebStoreProductModel?.ImageMediumPath + idx}
+            />
+          );
         })}
       </div>
     </section>
@@ -115,7 +123,10 @@ export const ProductsConfig: ComponentConfig<{}> = {
       CMSMappingId: 7,
       PortalId: 7,
     },
+    display: {
+      mode: "scroll",
+    },
   },
   label: "Products",
-  render: (props) => <Products {...props} />,
+  render: (props) => <Products key={props.id} {...props} />,
 };

@@ -133,5 +133,5 @@ export const FooterConfig: ComponentConfig<{}> = {
     key: "footer", // for store data in context, we use this key as variable name
   },
   label: "Footer",
-  render: (props) => <Footer {...props} />,
+  render: (props) => <Footer key={props.id} {...props} />,
 };
