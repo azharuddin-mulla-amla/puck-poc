@@ -15,7 +15,7 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { getPage } from "../../lib/get-page";
 import { Data } from "@measured/puck";
-import { apiIntercept } from "../../services";
+import { apiIntercept } from "../../services-v1";
 
 export async function generateMetadata({
   params: { puckPath = [] },
@@ -71,9 +71,39 @@ export default async function Page({ params: { puckPath = [] } }: TPage) {
     return notFound();
   }
 
-  const resultData: any = await getServerData(data);
+  // const resultData: any = await getServerData(data);
 
-  return <Client data={data} serverData={resultData} />;
+  for (const item of data.content) {
+    if (item.props?.url && item.props?.dataKey && item?.props) {
+      await fetch("http://localhost:3000/api/wrapper", {
+        method: "POST",
+        body: JSON.stringify({
+          url: item.props.url,
+          dataKey: item.props.dataKey,
+          body: item.props.body,
+        }),
+      });
+    }
+  }
+
+  //  for (const item of apiUrls) {
+  //   // await fetch()
+  //   await fetch("http://localhost:3000/api/wrapper", {
+  //     method: "POST",
+  //     body: JSON.stringify(item),
+  //   });
+  //   // Call API only if key not exist, avoid repeat Same API call
+  //   // if (!dataStor[item.key]) {
+  //   //   const response = await apiIntercept(item.url, item.body);
+  //   //   if (response) {
+  //   //     results[item.key] = response;
+  //   //   }
+  //   // }
+  //   // const result = await getData(item);
+  //   // console.log(result);
+  // }
+
+  return <Client data={data} serverData={{}} />;
 }
 
 // Force Next.js to produce static pages: https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config#dynamic

@@ -15,7 +15,12 @@ import "@measured/puck/puck.css";
 import { Client } from "./client";
 import { Metadata } from "next";
 import { getPage } from "../../../lib/get-page";
-import { apiIntercept, apiUrls } from "../../../services";
+import {
+  apiIntercept,
+  apiUrls,
+  dataStore,
+  getData,
+} from "../../../services-v1";
 
 type TPage = Readonly<{
   params: { puckPath: string[] };
@@ -35,10 +40,10 @@ async function getServerData() {
   let results: any = {};
   for (const item of apiUrls) {
     // Call API only if key not exist, avoid repeat Same API call
-    if (!results[item.key]) {
+    if (!results[item.dataKey]) {
       const response = await apiIntercept(item.url, item.body);
       if (response) {
-        results[item.key] = response;
+        results[item.dataKey] = response;
       }
     }
   }
@@ -49,7 +54,24 @@ export default async function Page({ params: { puckPath = [] } }: TPage) {
   const path = `/${puckPath.join("/")}`;
   const data = getPage(path);
 
-  const results = await getServerData();
+  // const results = await getServerData();
+  for (const item of apiUrls) {
+    // await fetch()
+    await fetch("http://localhost:3000/api/wrapper", {
+      method: "POST",
+      body: JSON.stringify(item),
+    });
+    // Call API only if key not exist, avoid repeat Same API call
+    // if (!dataStor[item.key]) {
+    //   const response = await apiIntercept(item.url, item.body);
+    //   if (response) {
+    //     results[item.key] = response;
+    //   }
+    // }
+    // const result = await getData(item);
+    // console.log(result);
+  }
 
-  return <Client path={path} data={data} serverData={results} />;
+  console.log("puckPath-----", puckPath);
+  return <Client path={path} data={data} serverData={{}} />;
 }

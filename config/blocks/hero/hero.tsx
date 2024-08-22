@@ -1,12 +1,12 @@
+/* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../../lib/get-class-name-factory";
 import { ComponentConfig } from "@measured/puck";
 import { quotes } from "./quotes";
 import { Section } from "../../components/section/section";
-import { useProvider } from "../../../context/RootProvider";
 import { Button } from "../../components/button/button";
 
 const getClassName = getClassNameFactory("Hero", styles);
@@ -19,18 +19,34 @@ function Hero({
   padding,
   image,
   puck,
+  url,
+  dataKey,
+  body,
 }: any) {
-  // Empty state allows us to test that components support hooks
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [_] = useState(0);
-  const context = useProvider();
-  const sliderBanners =
-    context?.sliderBanners?.Slider?.SliderBanners[0] ?? null;
-  const img = sliderBanners?.MediaPath
-    ? `https://znodetest.azureedge.net/znode10/${sliderBanners?.MediaPath}`
-    : "";
+  const [sliderBanners, setSliderBanners] = useState(null);
+  const [img, setImg] = useState("");
 
-  console.log(context);
+  useEffect(() => {
+    async function fetchData() {
+      const response = await fetch("http://localhost:3000/api/wrapper", {
+        method: "POST",
+        body: JSON.stringify({
+          url,
+          key: dataKey,
+          body,
+        }),
+      });
+      const responseData = await response.json();
+      const data = responseData?.data?.Slider?.SliderBanners[0] ?? null;
+      const img = data?.MediaPath
+        ? `https://znodetest.azureedge.net/znode10/${data?.MediaPath}`
+        : "";
+      setSliderBanners(data);
+      setImg(img);
+    }
+    fetchData();
+  }, []);
+
   return (
     <Section
       padding={padding}
@@ -127,7 +143,7 @@ export type HeroProps = {
   }[];
   apiData: any;
   url: string;
-  key: string;
+  dataKey: string;
 };
 
 export const HeroConfig: ComponentConfig<any> = {
@@ -233,7 +249,7 @@ export const HeroConfig: ComponentConfig<any> = {
     },
     padding: { type: "text" },
   },
-  label: "Banner",
+  label: "Hero",
   defaultProps: {
     title: "Hero",
     align: "left",
@@ -242,7 +258,7 @@ export const HeroConfig: ComponentConfig<any> = {
     padding: "64px",
     apiData: [],
     url: "https://apigateways-qa-znode.amla.io/WebStoreWidget/GetSlider/BannerSlider555PortalMapping7",
-    key: "sliderBanners", // for store data in context, we use this key as variable name
+    dataKey: "sliderBanners", // for store data in context, we use this key as variable name
     body: {
       LocaleId: 1,
       PublishCatalogId: 5,
@@ -296,5 +312,9 @@ export const HeroConfig: ComponentConfig<any> = {
 
     return fields;
   },
-  render: (props) => <Hero key={props.id} {...props} />,
+
+  render: (props) => {
+    const { id, ...restProps } = props;
+    return <Hero key={id} {...restProps} />;
+  },
 };

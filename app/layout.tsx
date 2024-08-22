@@ -1,4 +1,5 @@
 import "./styles.css";
+import "./layout.css";
 
 export default function RootLayout({
   children,

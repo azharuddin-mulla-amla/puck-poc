@@ -31,6 +31,7 @@ export function Client(props: Readonly<TClient>) {
               const { apiData, ...restProps } = item.props;
               return {
                 ...item,
+
                 props: { ...restProps },
               };
             }

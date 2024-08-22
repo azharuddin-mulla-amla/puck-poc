@@ -1,77 +1,106 @@
-import { ReactNode, useEffect, useState } from "react";
-import styles from "./styles.module.css";
+import React from "react";
+// import LoaderComponent from "../LoaderComponent/LoaderComponent";
 
-import getClassNameFactory from "../../../lib/get-class-name-factory";
-import { Loader } from "../loader/loader";
-
-const getClassName = getClassNameFactory("Button", styles);
-
-export const Button = ({
-  children,
-  href,
-  onClick,
-  variant = "primary",
-  type,
-  disabled,
-  tabIndex,
-  newTab,
-  fullWidth,
-  icon,
-  size = "medium",
-  loading: loadingProp = false,
-}: {
-  children: ReactNode;
-  href?: string;
-  onClick?: (e: any) => void | Promise<void>;
-  variant?: "primary" | "secondary";
-  type?: "button" | "submit" | "reset";
+interface ButtonProps {
+  as?: React.ElementType;
+  active?: boolean;
+  style?: React.CSSProperties;
+  block?: boolean;
+  className?: string;
+  children?: React.ReactNode;
+  classPrefix?: string;
+  color?: string;
   disabled?: boolean;
-  tabIndex?: number;
-  newTab?: boolean;
-  fullWidth?: boolean;
-  icon?: ReactNode;
-  size?: "medium" | "large";
   loading?: boolean;
-}) => {
-  const [loading, setLoading] = useState(loadingProp);
+  ripple?: boolean;
+  size?: "sm" | "md" | "lg";
+  startIcon?: React.ReactNode;
+  endIcon?: React.ReactNode;
+  type?: "button" | "submit" | "reset";
+  value?: string;
+  dataTestSelector: string;
+  loadingText?: boolean;
+  loaderColor?: string;
+  loaderHeight?: string;
+  loaderWidth?: string;
+  ariaLabel?: string;
+  // eslint-disable-next-line no-unused-vars
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  title?: string;
+  loaderText?: string;
+}
 
-  useEffect(() => setLoading(loadingProp), [loadingProp]);
+export function Button(props: ButtonProps) {
+  const {
+    as: Element = "button",
+    active,
+    block,
+    className,
+    children,
+    color,
+    disabled,
+    loading,
+    ripple = true,
+    size: sizeProp,
+    startIcon,
+    endIcon,
+    type: typeProp = "button",
+    value,
+    dataTestSelector,
+    ariaLabel,
+    onClick,
+    style,
+    title,
+  } = props;
+  const size = sizeProp ?? (block ? "lg" : "md");
 
-  const ElementType = href ? "a" : type ? "button" : "span";
+  const getClasses = () => {
+    const colorClasses = color
+      ? `text-white bg-${color}-600 hover:bg-${color}-700 focus:ring-${color}-500`
+      : "";
+    const sizeClasses =
+      size === "sm"
+        ? "px-2.5 py-1.5 text-sm"
+        : size === "md"
+        ? "px-2 py-2 text-md"
+        : "px-6 py-3 text-lg";
+    const activeClasses = active ? "active:bg-opacity-50" : "";
+    const blockClasses = block ? "w-full" : "";
+    const disabledClasses = disabled
+      ? "opacity-50 cursor-not-allowed"
+      : loading
+      ? "cursor-wait"
+      : ripple
+      ? "transition duration-300 ease-in-out transform-gpu"
+      : "";
 
-  const el = (
-    <ElementType
-      className={getClassName({
-        primary: variant === "primary",
-        secondary: variant === "secondary",
-        disabled,
-        fullWidth,
-        [size]: true,
-      })}
-      onClick={(e) => {
-        if (!onClick) return;
+    return `${colorClasses} ${sizeClasses} ${activeClasses} ${blockClasses} ${disabledClasses} ${
+      className ?? ""
+    }`;
+  };
 
-        setLoading(true);
-        Promise.resolve(onClick(e)).then(() => {
-          setLoading(false);
-        });
-      }}
-      type={type}
+  return (
+    <Element
+      title={title}
+      type={typeProp}
+      className={getClasses()}
       disabled={disabled || loading}
-      tabIndex={tabIndex}
-      target={newTab ? "_blank" : undefined}
-      rel={newTab ? "noreferrer" : undefined}
-      href={href}
+      onClick={onClick}
+      value={value}
+      data-test-selector={dataTestSelector}
+      aria-label={
+        ariaLabel ? ariaLabel : children ? `${children} button` : "Icon"
+      }
+      style={style}
     >
-      {icon && <div className={getClassName("icon")}>{icon}</div>}
+      {startIcon && <span className={children ? "mr-2" : ""}>{startIcon}</span>}
+      {/* {loading ? (
+        <LoaderComponent loaderText={loaderText} isLoading={loading} isLoadingTextShow={loadingText} color={loaderColor} height={loaderHeight} width={loaderWidth} />
+      ) : (
+        children
+      )} */}
       {children}
-      {loading && (
-        <div className={getClassName("spinner")}>
-          <Loader size={14} />
-        </div>
-      )}
-    </ElementType>
+      {endIcon && <span className={children ? "ml-2" : ""}>{endIcon}</span>}
+    </Element>
   );
-
-  return el;
-};
+}

@@ -1,5 +1,5 @@
 import { ComponentConfig } from "@measured/puck";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useProvider } from "../../../context/RootProvider";
 
@@ -19,7 +19,10 @@ function Card(props: any) {
       }}
     >
       <div>
-        <h3>Title</h3>
+        <h3>
+          {props?.PublishCategoryModel?.CategoryName ??
+            props?.PublishCategoryModel?.CatalogName}
+        </h3>
         <p>description....</p>
       </div>
       <div style={{}}>
@@ -32,7 +35,24 @@ function Card(props: any) {
   );
 }
 export function Categories(props: any) {
-  const context = useProvider();
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const response = await fetch("http://localhost:3000/api/wrapper", {
+        method: "POST",
+        body: JSON.stringify({
+          url: props.url,
+          dataKey: props.dataKey,
+          body: props.body,
+        }),
+      });
+      const responseData = await response.json();
+      setCategories(responseData?.data?.Categories ?? []);
+      console.log("response-----categories", responseData.data.Categories);
+    }
+    fetchData();
+  }, []);
 
   return (
     <section
@@ -46,10 +66,9 @@ export function Categories(props: any) {
           display: "grid",
           gap: 50,
           gridTemplateColumns: "1fr 1fr 1fr 1fr",
-          // margin: "50px",
         }}
       >
-        {[1, 2, 3, 4].map((item: any) => {
+        {categories.map((item: any) => {
           return <Card key={item} {...item} />;
         })}
       </div>
@@ -59,22 +78,10 @@ export function Categories(props: any) {
 
 export const CategoriesConfig: ComponentConfig<{}> = {
   fields: {},
-  //   resolveData: async () => {
-  //     const url = "https://jsonplaceholder.typicode.com/posts";
-  //     const response = await fetch(url);
-
-  //     const data = await response.json();
-  //     return {
-  //       props: {
-  //         apiData: data,
-  //         url: url,
-  //       },
-  //     };
-  //   },
   defaultProps: {
     apiData: [],
     url: "https://apigateways-qa-znode.amla.io/WebStoreWidget/GetCategories/CategoryList1992PortalMapping7",
-    key: "categories", // for store data in context, we use this key as variable name
+    dataKey: "categories", // for store data in context, we use this key as variable name
     body: {
       LocaleId: 1,
       PublishCatalogId: 5,
